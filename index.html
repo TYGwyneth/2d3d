@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<title>⧊</title>
+		<link rel="stylesheet" type="text/css" href="stylesheets/main.css">
+		<style>canvas { width: 100%; height: 100%; background-color: #f0f0f0; }</style>
+	</head> 
+	<body>
+		<script src="js/three.min.js"></script>
+		<script src="js/TrackballControls.js"></script>
+		<script>
+			// Our Javascript will go here.
+
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setClearColor( 0xf0f0f0, 1);
+			document.body.appendChild( renderer.domElement );
+
+			var geometry = new THREE.TetrahedronGeometry(1,0);
+			var material = new THREE.MeshPhongMaterial({ color: 0x777, emissive: 0xfff, ambient: 0x444444, wireframe: true });
+			var prism = new THREE.Mesh( geometry, material);
+			prism.rotation.y = 0.25 * Math.PI;
+			prism.rotation.x = 0.80 * Math.PI;
+			prism.rotation.z = 0 * Math.PI;
+			prism.castShadow = true;
+			prism.receiveShadow = true;
+			scene.add( prism );
+
+			// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
+			// directionalLight.position.set( 0, 1, 0 );
+			// scene.add( directionalLight );
+
+			scene.add( new THREE.AmbientLight( 0x505050 ) );
+
+			var light = new THREE.SpotLight( 0xffffff, 1.5 );
+			light.position.set( 0, 500, 2000 );
+			light.castShadow = true;
+
+			light.shadowCameraNear = 200;
+			light.shadowCameraFar = camera.far;
+			light.shadowCameraFov = 50;
+
+			light.shadowBias = -0.00022;
+			light.shadowDarkness = 0.5;
+
+			light.shadowMapWidth = 2048;
+			light.shadowMapHeight = 2048;
+
+			scene.add( light );
+
+			camera.position.z = 4;
+
+			controls = new THREE.TrackballControls( camera );
+			controls.rotateSpeed = 2.0;
+			controls.zoomSpeed = 1.2;
+			controls.panSpeed = 0.8;
+			controls.noZoom = false;
+			controls.noPan = false;
+			controls.staticMoving = true;
+			controls.dynamicDampingFactor = 0.3;
+
+			plane = new THREE.Mesh( new THREE.PlaneGeometry( 2000, 2000, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.25, transparent: true, wireframe: true } ) );
+			plane.visible = true;
+			scene.add( plane );
+
+			function render() {
+				requestAnimationFrame(render);
+				controls.update();
+				// prism.rotation.x += 0.01;
+				// prism.rotation.y += 0.01;
+				// prism.rotation.z += 0.01;
+				renderer.render(scene, camera);
+			}
+			render();
+		</script>
+	</body>
+</html>
